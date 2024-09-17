@@ -19,12 +19,12 @@ function All() {
         try {
             if (catsStore.length === 0) {
                 setLoading(true)
-                const response = await fetch('https://api.thecatapi.com/v1/images/search?limit=10', { //https://api.thecatapi.com/v1/images/search?limit=20
+                const response = await axios.get('https://api.thecatapi.com/v1/images/search?limit=15', {
                     headers: {
                         'x-api-key': 'live_P2t7docOAnfle6ARk45HmJpBE88kxCfmyrtJwmg7BfzDN2nNhQLnl9tZrJD9j4pN'
                     }
                 })
-                const data = await response.json()
+                const data = response.data
                 setCats(data)
                 dispatch(updateCats(data))
                 setLoading(false)
@@ -62,6 +62,29 @@ function All() {
      useEffect(() => {
         getAllCats()
     }, [])
+
+    document.addEventListener('scroll', async () => {
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight
+    
+        if (window.scrollY >= scrollableHeight && !loading) {
+            try {
+                setLoading(true)
+                const response = await axios.get('https://api.thecatapi.com/v1/images/search?limit=5', {
+                    headers: {
+                        'x-api-key': 'live_P2t7docOAnfle6ARk45HmJpBE88kxCfmyrtJwmg7BfzDN2nNhQLnl9tZrJD9j4pN'
+                    }
+                })
+                const data = response.data
+                setCats((prev) => prev.concat(data))
+                dispatch(updateCats(data))
+                setLoading(false)
+            } catch (err) {
+                console.log(err)
+                setError('Error fetching data')
+                setLoading(false)
+            }
+        }
+    })
 
 
     return <div className='cats-div'>
