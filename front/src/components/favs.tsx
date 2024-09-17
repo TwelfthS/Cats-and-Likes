@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { removeFavs } from '../reducers/mainSlice'
+import { loadFavs, removeFavs } from '../reducers/mainSlice'
 import { heartAppear, heartDisappear, network } from './utils'
 import { Cat } from '../types'
 
@@ -13,10 +13,11 @@ function Favs() {
 
     const dispatch = useAppDispatch()
     const favsStore = useAppSelector(store => store.slice.favs)
+    const isFirstLoad = useAppSelector(store => store.slice.isFirstLoad)
 
     const getFavs = async () => {
         try {
-            if (favsStore.length === 0) {
+            if (isFirstLoad) {
                 setLoading(true)
                 const response = await axios.get(network + 'likes')
                 const data = response.data.data
@@ -26,6 +27,7 @@ function Favs() {
                     const cat = resp.data
                     favsTmp.push(cat)
                 }
+                dispatch(loadFavs(favsTmp))
                 setFavs(favsTmp)
                 setLoading(false)
             } else {

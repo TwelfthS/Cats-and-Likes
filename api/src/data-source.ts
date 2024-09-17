@@ -3,10 +3,6 @@ import { DataSource } from "typeorm"
 import { Like } from "./entity/Like"
 import 'dotenv/config'
 
-console.log(process.env.POSTGRES_USER)
-console.log(process.env.POSTGRES_PASSWORD)
-console.log(process.env.POSTGRES_DB)
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: "cat-pinterest-api-pg",

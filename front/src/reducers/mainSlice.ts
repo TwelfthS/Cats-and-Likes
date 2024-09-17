@@ -6,13 +6,18 @@ const favs: Cat[] = []
 
 const initialState = {
     cats,
-    favs
+    favs,
+    isFirstLoad: true
 }
 
 const slice = createSlice({
     name: 'main',
     initialState,
     reducers: {
+        loadFavs: (state, action: PayloadAction<Cat[]>) => {
+            state.favs = [...action.payload]
+            state.isFirstLoad = false
+        },
         updateCats: (state, action: PayloadAction<Cat[]>) => {
             state.cats = state.cats.concat(action.payload)
         },
@@ -25,6 +30,6 @@ const slice = createSlice({
     },
 })
 
-export const {updateCats, updateFavs, removeFavs} = slice.actions
+export const {loadFavs, updateCats, updateFavs, removeFavs} = slice.actions
 
 export default slice.reducer
